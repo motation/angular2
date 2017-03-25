@@ -32,7 +32,7 @@
       app: {
         defaultExtension: 'js',
         meta: {
-          './*.js': {
+          './build/*.js': {
             loader: 'systemjs-angular-loader.js'
           }
         }
