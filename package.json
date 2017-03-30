@@ -4,11 +4,14 @@
   "description": "QuickStart package.json from the documentation, supplemented with testing support",
   "scripts": {
     "build": "tsc -p src/",
+    "postinstall": "typings install",
     "buildBackend": "tsc -p backend/",
     "startBackend": "node backend/build/server.js",
     "build:watch": "tsc -p src/ -w",
     "serve": "lite-server -c=bs-config.json",
-    "start": "concurrently \"npm run build:watch\" \"npm run serve\" \"npm run buildBackend\" \"npm run startBackend\""
+    "start": "concurrently \"npm run build:watch\" \"npm run serve\" \"npm run buildBackend\" \"npm run startBackend\"",
+    "csBackend" : "npm run buildBackend && npm run startBackend",
+    "typings":"typings"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +32,9 @@
     "core-js": "^2.4.1",
     "rxjs": "5.0.1",
     "zone.js": "^0.8.4",
-    "websocket":"1.0.24"
+    "websocket":"1.0.24",
+    "finalhandler": "^1.0.0",
+    "serve-static": "^1.11.2"
   },
   "devDependencies": {
     "concurrently": "^3.2.0",
