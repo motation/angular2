@@ -12,6 +12,7 @@ export class Server {
 
     private static PORT:number = 3000;
     private static REQUEST:string = "request";
+    private static CONFIG_SRC:string = "./backend/props/config.json";
 
     private static REQUEST_MAPPING_NODE_MODULES:string = "node_modules";
     private static REQUEST_MAPPING_API:string = "result";
@@ -62,11 +63,17 @@ export class Server {
             switch (json.type) {
                 case "request_property":
                 {
-                    FileReader.readJSONFile("./backend/props/config.json", (data:any)=> {
+                    FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
                         json.data = JSON.parse(data);
                         json.type = "response_property";
                         connection.send(JSON.stringify(json));
                     });
+                    break;
+                }
+                case "request_change_property":
+                {
+                    let data:any = JSON.parse(message.utf8Data);
+                    FileReader.writeConfig(Server.CONFIG_SRC, JSON.stringify(data.data));
                     break;
                 }
             }

@@ -34,6 +34,12 @@ export class ConfigurationComponent {
     }
 
     private save():void {
-        console.log("impl save");
+        let json:any = {};
+        json.type = "request_change_property";
+        json.data = {};
+        for (let item in this.values) {
+            json.data[this.values[item].key] = this.values[item].value;
+        }
+        this.websocketService.sendMessage(JSON.stringify(json));
     }
 }
