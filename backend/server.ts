@@ -6,6 +6,7 @@ import finalHandler = require('finalhandler');
 import serveStatic = require('serve-static');
 
 import path = require('path');
+import {FileReader} from "./fileReader";
 
 export class Server {
 
@@ -57,9 +58,18 @@ export class Server {
 
     private onWSMessage = (connection, message:any) => {
         if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
-            console.log(message);
+            let json:any = JSON.parse(message.utf8Data);
+            switch (json.type) {
+                case "request_property":
+                {
+                    FileReader.readJSONFile("./backend/props/config.json", (data:any)=> {
+                        json.data = JSON.parse(data);
+                        json.type = "response_property";
+                        connection.send(JSON.stringify(json));
+                    });
+                    break;
+                }
+            }
         }
     }
 
@@ -84,7 +94,6 @@ export class Server {
 
         if (this.urlContains(url, Server.REQUEST_MAPPING_NODE_MODULES)) {
             serve = serveStatic(Server.NODE_MODULES_PATH);
-            console.log(url);
         } else if (this.urlContains(url, Server.REQUEST_MAPPING_API)) {
             //OF TODO impl backend api
         }
