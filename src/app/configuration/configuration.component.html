@@ -1,1 +1,10 @@
 <h1>Konfiguration</h1>
+<div *ngFor='let value of values' style="width:200px; top:50px; left:50px;">
+    <div class="input-group">
+        <span style="width: 100px;" class="input-group-addon">{{value.key}}</span>
+        <input type="text" class="form-control" value="{{value.value}}">
+    </div>
+</div>
+<div class="btn-group" role="group" aria-label="...">
+    <button (click)="save()" type="button" class="btn btn-default">Speichern</button>
+</div>
