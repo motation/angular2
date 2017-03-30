@@ -9,8 +9,9 @@ export class WebsocketService {
     private websocket:Websocket;
 
     constructor() {
-        //OF TODO load port from conf
-        this.websocket = new Websocket("3000");
+        var host:string = window.location.hostname;
+        var port:string = window.location.port;
+        this.websocket = new Websocket(host,port);
     }
 
     public getWebsocket():Websocket {

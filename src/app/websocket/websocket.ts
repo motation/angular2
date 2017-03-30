@@ -1,8 +1,9 @@
 export class Websocket {
     private connection:WebSocket;
 
-    constructor(port:string) {
-        this.connection = new WebSocket("ws://localhost:" + port, 'echo-protocol');
+    constructor(host:string, port:string) {
+
+        this.connection = new WebSocket("ws://" + host + ":" + port, 'echo-protocol');
     }
 
     public addConnectionOpenCallback = function (callback:Function) {
