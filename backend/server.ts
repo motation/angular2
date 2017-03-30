@@ -8,6 +8,8 @@ import serveStatic = require('serve-static');
 import path = require('path');
 import {FileReader} from "./fileReader";
 
+import request = require('request');
+
 export class Server {
 
     private static PORT:number = 3000;
@@ -64,9 +66,10 @@ export class Server {
                 case "request_property":
                 {
                     FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
-                        json.data = JSON.parse(data);
-                        json.type = "response_property";
-                        connection.send(JSON.stringify(json));
+                        let obj:any = {};
+                        obj.data = JSON.parse(data);
+                        obj.type = "response_property";
+                        connection.send(JSON.stringify(obj));
                     });
                     break;
                 }
@@ -74,6 +77,29 @@ export class Server {
                 {
                     let data:any = JSON.parse(message.utf8Data);
                     FileReader.writeConfig(Server.CONFIG_SRC, JSON.stringify(data.data));
+                    break;
+                }
+                case "request_exercises":
+                {
+                    FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
+                        let obj:any = {};
+                        obj.data = JSON.parse(data);
+                        obj.type = "response_exercises";
+                        let url:string = obj.data.api + obj.data.itemType;
+                        let consumerId:string = obj.data.consumerId;
+
+                        request.post(
+                            url, {consumerId: consumerId},
+                            function (error, response, body) {
+                                if (!error && response.statusCode == 200) {
+                                    obj.data = body;
+                                    connection.send(JSON.stringify(obj));
+                                } else {
+                                    console.log(error);
+                                }
+                            }
+                        );
+                    });
                     break;
                 }
             }
