@@ -19,10 +19,11 @@ export class WebsocketService {
         this.websocket.addReceiveCallback(this.messageHandler);
     }
 
-    public onMessage(messageType:string, callback:Function):void {
+    public onMessage(messageType:string, callback:Function, removeAfterExecution:Boolean):void {
         let handle:any = {};
         handle.messageType = messageType;
         handle.callback = callback;
+        handle.remove = removeAfterExecution;
         WebsocketService.handler.push(handle);
     }
 
@@ -31,11 +32,15 @@ export class WebsocketService {
     }
 
     private messageHandler = (message:any) => {
-        for (var i = 0; i < WebsocketService.handler.length; i++) {
+        let i = WebsocketService.handler.length;
+        while (i--) {
             let handle:any = WebsocketService.handler[i];
             let data:any = JSON.parse(message.data);
             if (data.type === handle.messageType) {
                 handle.callback(data);
+            }
+            if (handle.remove) {
+                WebsocketService.handler.splice(i, 1);
             }
         }
     }

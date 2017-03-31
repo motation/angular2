@@ -1,9 +1,9 @@
 <div style="position: relative; width:800px; top:10px; left:50px;">
     <h1>Konfiguration</h1>
-    <div *ngFor='let value of values'>
+    <div *ngFor='let item of values'>
         <div class="input-group">
-            <span style="width: 100px;" class="input-group-addon">{{value.key}}</span>
-            <input type="text" class="form-control" value="{{value.value}}">
+            <span style="width: 100px;" class="input-group-addon">{{item.key}}</span>
+            <input type="text" class="form-control" [(ngModel)]="item.value">
         </div>
     </div>
     <div style="padding-top: 10px;" class="btn-group" role="group" aria-label="...">

@@ -8,16 +8,20 @@ import {WebsocketService} from "../websocket/websocketService";
 })
 export class ExercisesComponent {
 
+    private static REQUEST_EXERCISES:string = "request_exercises";
+    private static RESPONSE_EXERCISES:string = "response_exercises";
+
     private exercises:any = [];
 
     constructor(private websocketService:WebsocketService) {
-        this.websocketService.onMessage("response_exercises", this.loadExercises);
+        let removeAfterExecution:Boolean = true;
+        this.websocketService.onMessage(ExercisesComponent.RESPONSE_EXERCISES, this.loadExercises, removeAfterExecution);
         this.initExercises();
     }
 
     private initExercises():void {
         let message:any = {};
-        message.type = "request_exercises";
+        message.type = ExercisesComponent.REQUEST_EXERCISES;
         this.websocketService.sendMessage(JSON.stringify(message));
     }
 

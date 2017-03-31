@@ -7,6 +7,7 @@ import {HomeComponent} from "./home/home.component";
 import {WebsocketService} from "./websocket/websocketService";
 import {ConfigurationComponent} from "./configuration/configuration.component";
 import {ExercisesComponent} from "./exercises/exercises.component";
+import { FormsModule } from '@angular/forms';
 
 
 const appRoutes:Routes = [
@@ -18,7 +19,7 @@ const appRoutes:Routes = [
 
 
 @NgModule({
-    imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
+    imports: [BrowserModule, RouterModule.forRoot(appRoutes), FormsModule],
     declarations: [AppComponent, Navigation, HomeComponent, ConfigurationComponent, ExercisesComponent],
     bootstrap: [AppComponent, Navigation],
     providers: [WebsocketService]
