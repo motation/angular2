@@ -1,1 +1,5 @@
-{"port":"3000","consumerId":"123","api":"http://172:8080/api/v1/query/","itemType":"exercise"}
+{
+  "consumerId": "57d8006bf00eeb1fcec62350",
+  "api": "http://localhost:8080/api/v1/query",
+  "player": "http://localhost:8080/player/v1/ui?consumerId="
+}

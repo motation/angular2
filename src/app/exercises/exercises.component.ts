@@ -11,7 +11,7 @@ export class ExercisesComponent {
     private static REQUEST_EXERCISES:string = "request_exercises";
     private static RESPONSE_EXERCISES:string = "response_exercises";
 
-    private exercises:any = [];
+    public exercises:any = [];
 
     constructor(private websocketService:WebsocketService) {
         let removeAfterExecution:Boolean = true;
@@ -25,7 +25,17 @@ export class ExercisesComponent {
         this.websocketService.sendMessage(JSON.stringify(message));
     }
 
-    private loadExercises = (exercises:any)=> {
-        console.log(exercises);
+    private loadExercises = (data:any)=> {
+
+        this.exercises = data.exercises.data;
+
+        console.log(data);
+        for (let i in data.exercises.data) {
+            let exercise = data.exercises.data[i];
+            exercise.url = data.player + exercise.id + "%2Ftype%2Fexercise";
+        }
+        this.exercises = data.exercises.data;
+
+
     }
 }

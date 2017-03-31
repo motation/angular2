@@ -83,22 +83,51 @@ export class Server {
                 {
                     FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
                         let obj:any = {};
+
                         obj.data = JSON.parse(data);
                         obj.type = "response_exercises";
-                        let url:string = obj.data.api + obj.data.itemType;
                         let consumerId:string = obj.data.consumerId;
+                        let player:string = obj.data.player + consumerId + "&path=%2Fresult%2Fid%2F";
+                        obj.player = player;
+                        let url:string = obj.data.api + "/exercise?consumerId=" + consumerId;
 
-                        request.post(
-                            url, {consumerId: consumerId},
-                            function (error, response, body) {
-                                if (!error && response.statusCode == 200) {
-                                    obj.data = body;
-                                    connection.send(JSON.stringify(obj));
-                                } else {
-                                    console.log(error);
-                                }
-                            }
-                        );
+                        request({
+                            url: url,
+                            method: "POST",
+                            json: true,
+                            body: {},
+                            headers: {"Authorization": "Basic bG9jYWw6MTIzNDU2Nzg=", "Content-Type": "application/json"}
+                        }, function (error, response, body) {
+                            obj.exercises = body;
+                            delete obj.data;
+                            connection.send(JSON.stringify(obj));
+                        });
+                    });
+                    break;
+                }
+
+                case "request_sequence":
+                {
+                    FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
+                        let obj:any = {};
+                        obj.data = JSON.parse(data);
+                        obj.type = "response_sequence";
+                        let consumerId:string = obj.data.consumerId;
+                        let backendCallback:string = obj.data.backendCallback;
+                        let player:string = obj.data.player + consumerId + "&path=%2Fresult%2Fid%2F";
+                        obj.player = player;
+                        let url:string = obj.data.api + "/sequence?consumerId=" + consumerId;
+                        request({
+                            url: url,
+                            method: "POST",
+                            json: true,
+                            body: {},
+                            headers: {"Authorization": "Basic bG9jYWw6MTIzNDU2Nzg=", "Content-Type": "application/json"}
+                        }, function (error, response, body) {
+                            obj.sequences = body;
+                            delete obj.data;
+                            connection.send(JSON.stringify(obj));
+                        });
                     });
                     break;
                 }
@@ -128,9 +157,26 @@ export class Server {
         if (this.urlContains(url, Server.REQUEST_MAPPING_NODE_MODULES)) {
             serve = serveStatic(Server.NODE_MODULES_PATH);
         } else if (this.urlContains(url, Server.REQUEST_MAPPING_API)) {
-            //OF TODO impl backend api
+            let id:string = this.parseForId(request.url);
+            let type:string = this.parseForType(request.url);
+            let jsonfy:string = JSON.stringify({type: type, playerItemId: id});
+            response.end(jsonfy);
         }
         serve(request, response, done);
+    }
+
+    private parseForType(url:string):string {
+        let idx = url.indexOf("type");
+        let type = url.substr(idx).replace("type/", "");
+        return type;
+    }
+
+    private parseForId(url:string):string {
+        let idx = url.indexOf("id");
+        let id = url.substr(idx).replace("id/", "");
+        let idx2 = id.indexOf("/");
+        id = id.substr(0, idx2);
+        return id;
     }
 
 

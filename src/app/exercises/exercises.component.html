@@ -1,3 +1,6 @@
-<div>
-    <span class="label label-primary">Aufgabe</span>
+<div style="position: relative; top: 10px; left: 50px; width: 500px;">
+    <div class="well well-sm" *ngFor='let exercise of exercises'>
+        {{exercise.name}}
+        <a href="{{exercise.url}}" target="_blank"><span class="label label-primary">Öffnen</span></a>
+    </div>
 </div>

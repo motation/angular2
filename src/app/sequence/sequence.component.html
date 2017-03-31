@@ -1,0 +1,6 @@
+<div style="position: relative; top: 10px; left: 50px; width: 500px;">
+    <div class="well well-sm" *ngFor='let sequence of sequences'>
+        {{sequence.name}}
+        <a href="{{sequence.url}}" target="_blank"><span class="label label-primary">Öffnen</span></a>
+    </div>
+</div>
