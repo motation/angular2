@@ -83,8 +83,10 @@ export class Server {
                 {
                     FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
                         let obj:any = {};
-
                         obj.data = JSON.parse(data);
+
+                        let base64UserPass:string = new Buffer(obj.data.apiUser + ":" + obj.data.apiPass).toString('base64');
+
                         obj.type = "response_exercises";
                         let consumerId:string = obj.data.consumerId;
                         let player:string = obj.data.player + consumerId + "&path=%2Fresult%2Fid%2F";
@@ -96,7 +98,7 @@ export class Server {
                             method: "POST",
                             json: true,
                             body: {},
-                            headers: {"Authorization": "Basic bG9jYWw6MTIzNDU2Nzg=", "Content-Type": "application/json"}
+                            headers: {"Authorization": "Basic " + base64UserPass, "Content-Type": "application/json"}
                         }, function (error, response, body) {
                             obj.exercises = body;
                             delete obj.data;
@@ -110,7 +112,11 @@ export class Server {
                 {
                     FileReader.readConfig(Server.CONFIG_SRC, (data:any)=> {
                         let obj:any = {};
+
                         obj.data = JSON.parse(data);
+
+                        let base64UserPass:string = new Buffer(obj.data.apiUser + ":" + obj.data.apiPass).toString('base64');
+
                         obj.type = "response_sequence";
                         let consumerId:string = obj.data.consumerId;
                         let backendCallback:string = obj.data.backendCallback;
@@ -122,7 +128,7 @@ export class Server {
                             method: "POST",
                             json: true,
                             body: {},
-                            headers: {"Authorization": "Basic bG9jYWw6MTIzNDU2Nzg=", "Content-Type": "application/json"}
+                            headers: {"Authorization": "Basic " + base64UserPass, "Content-Type": "application/json"}
                         }, function (error, response, body) {
                             obj.sequences = body;
                             delete obj.data;
